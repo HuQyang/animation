@@ -1,5 +1,5 @@
 import pickle
-from data_loading.skeleton.save_animation import *
+from save_animation import *
 
 with open('./mydata.p', 'rb') as f:
     data = pickle.load(f)

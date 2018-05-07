@@ -1,4 +1,4 @@
-from data_loading.skeleton.save_animation import extract_animation_data
+from save_animation import extract_animation_data
 from argparse import ArgumentParser
 import glob
 import os
@@ -18,7 +18,7 @@ def make_skeleton_filename(animation_file):
     character_name = get_character_name(animation_file)
     animation_name = get_animation_name(animation_file)
     home_dir = os.path.join(args.output_dir, character_name, animation_name)
-    os.makedirs(home_dir)
+    os.makedirs(home_dir, exist_ok=True)
     output_file = os.path.join(home_dir, 'skeleton.p')
     return output_file
 
