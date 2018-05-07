@@ -46,6 +46,7 @@ class NodeWalker:
         self.node_names = []
         self.children = dict()
         self.global_transforms = dict()
+        self.local_transforms = dict()
         self._keyframes = [0.0]
 
     @property
@@ -60,17 +61,23 @@ class NodeWalker:
         parent_name = node.GetName()
         self.node_names.append(parent_name)
         self.children[parent_name] = []
-        self.global_transforms[parent_name] = tfs = TransformSequence()
+        self.global_transforms[parent_name] = globals = TransformSequence()
+        self.local_transforms[parent_name] = locals = TransformSequence()
 
         # get global transform at time t
         for t in self.keyframes:
             time = FbxTime()
             time.SetSecondDouble(t)
+
+            # Global transformation (relative to skeleton origin)
             tf = self._evaluator.GetNodeGlobalTransform(node, time)
-            tfs.add(tf, t)
+            globals.add(tf, t)
+
+            # Local transformation (relative to parent node)
+            tf = self._evaluator.GetNodeLocalTransform(node, time)
+            locals.add(tf, t)
 
         for i in range(node.GetChildCount()):
-
             child = node.GetChild(i)
             child_name = child.GetName()
             self.children[parent_name].append(child_name)
@@ -99,6 +106,7 @@ def extract_animation_data(file, fps=30, max_time=10):
         'children': w.children,
         'keyframes': w.keyframes,
         'global_transforms': w.global_transforms,
+        'local_transforms': w.local_transforms,
     }
     return data
 

@@ -1,8 +1,15 @@
 import pickle
 from save_animation import *
 
-with open('./mydata.p', 'rb') as f:
+
+file = './out/test_data/Air Squat Workout/skeleton.p'
+
+with open(file, 'rb') as f:
     data = pickle.load(f)
+
+# Contents of dictionary
+print('\n', data.keys(), '\n')
+
 
 # The filename where data was extracted from
 print(data['filename'])
@@ -22,5 +29,3 @@ sequence = transform_sequences['newVegas:LeftFoot']
 # Get transformation matrix (4x4) at 10th time step
 matrix = sequence.get(9)
 print(matrix)
-
-
