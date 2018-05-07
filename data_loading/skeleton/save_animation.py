@@ -78,7 +78,7 @@ class NodeWalker:
             self.traverse_nodes(child)
 
 
-def extract_animation_data(file, fps=30, max_time=120):
+def extract_animation_data(file, fps=30, max_time=10):
     assert fps > 0
     assert max_time > 0
 
