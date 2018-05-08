@@ -26,17 +26,16 @@ class TransformSequence:
         self.fbx_matrices.append(fbx_matrix)
         self.numpy_matrices.append(fbx_matrix_to_numpy(fbx_matrix))
 
-
     def get(self, index):
         return self.numpy_matrices[index]
 
+    def get_tensor(self):
+        # Returns the tensor of transformation matrices
+        # Shape: [seq_length, 4, 4]
+        return np.stack(self.numpy_matrices)
+
     def __str__(self):
-        output = ''
-        for m in self.numpy_matrices:
-            for row in m:
-                output += str(row) + '\n'
-            output += '\n'
-        return output
+        return str(self.numpy_matrices)
 
 
 class NodeWalker:
