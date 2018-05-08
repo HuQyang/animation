@@ -1,8 +1,16 @@
 from save_animation import extract_animation_data
 from argparse import ArgumentParser
-import glob
 import os
 import pickle
+import fnmatch
+
+
+def find_files(folder, search):
+    matches = []
+    for root, dirnames, filenames in os.walk(folder):
+        for filename in fnmatch.filter(filenames, search):
+            matches.append(os.path.join(root, filename))
+    return matches
 
 
 def get_character_name(animation_file):
@@ -32,7 +40,6 @@ if __name__ == '__main__':
 
     # "folder" is the character name and contains .fbx files with different animation names
     # Will save skeleton to: output_dir/character_name/animation_name/
-
     parser = ArgumentParser()
     parser.add_argument('folder')
     parser.add_argument('--fps', type=int, default=30)
@@ -40,9 +47,9 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', type=str, default='./out/')
     args = parser.parse_args()
 
-    files = []
-    search = os.path.join(args.folder, '*.fbx')
-    files = glob.glob(search)
+    files = find_files(args.folder, '*.fbx')
+    files = [os.path.abspath(f) for f in files]
+
     print('Found {} in {}'.format(len(files), args.folder))
 
     for file in files:
