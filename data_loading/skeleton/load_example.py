@@ -15,6 +15,7 @@ print('\n', data.keys(), '\n')
 print(data['filename'])
 
 # Name of nodes
+# You can access the transformations using these names (see below)
 print(data['node_names'])
 
 # Node hierarchy (skeleton)
@@ -24,7 +25,7 @@ print(data['children'])
 transform_sequences = data['global_transforms']
 
 # Get sequence of a node
-sequence = transform_sequences['newVegas:LeftFoot']
+sequence = transform_sequences['LeftFoot']
 
 # Get transformation matrix (4x4) at 10th time step
 matrix = sequence.get(9)

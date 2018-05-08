@@ -6,6 +6,12 @@ import glob
 from argparse import ArgumentParser
 
 
+def normalize_node_name(name):
+    # this will discard the prefix of the node name
+    # example: 'newVegas:LeftFoot' becomes 'LeftFoot'
+    return name.split(':')[-1]
+
+
 def fbx_matrix_to_numpy(matrix):
     m = []
     for i in range(4):
@@ -57,7 +63,7 @@ class NodeWalker:
         self._keyframes = values
 
     def traverse_nodes(self, node):
-        parent_name = node.GetName()
+        parent_name = normalize_node_name(node.GetName())
         self.node_names.append(parent_name)
         self.children[parent_name] = []
         self.global_transforms[parent_name] = globals = TransformSequence()
@@ -78,7 +84,7 @@ class NodeWalker:
 
         for i in range(node.GetChildCount()):
             child = node.GetChild(i)
-            child_name = child.GetName()
+            child_name = normalize_node_name(child.GetName())
             self.children[parent_name].append(child_name)
 
             self.traverse_nodes(child)
