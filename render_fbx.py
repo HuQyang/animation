@@ -95,7 +95,8 @@ for model_path in models:
         
         # bpy.data.scenes["test"].frame_end=100
 
-        bpy.ops.render.render(write_still=True,animation=True)
+        #bpy.ops.render.render(write_still=True,animation=True)
+        bpy.ops.render.opengl(write_still=True,animation=True)
 
 # filename = "/Users/qiyang/Documents/SIGGRAPHAsia/fbx/codes/render_fbx.py"
 # exec(compile(open(filename).read(), filename, 'exec'))
