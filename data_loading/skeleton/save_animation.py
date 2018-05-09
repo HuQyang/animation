@@ -37,8 +37,8 @@ class TransformSequence:
 
     def get_tensor(self):
         # Returns the tensor of transformation matrices
-        # Shape: [seq_length, 4, 4]
-        return np.stack(self.numpy_matrices)
+        a = [np.expand_dims(m, axis=0) for m in self.numpy_matrices]
+        return np.concatenate(a, axis=0)
 
     def __str__(self):
         return str(self.numpy_matrices)
@@ -66,8 +66,8 @@ class NodeWalker:
         parent_name = normalize_node_name(node.GetName())
         self.node_names.append(parent_name)
         self.children[parent_name] = []
-        self.global_transforms[parent_name] = globals = TransformSequence()
-        self.local_transforms[parent_name] = locals = TransformSequence()
+        globals = TransformSequence()
+        locals = TransformSequence()
 
         # get global transform at time t
         for t in self.keyframes:
@@ -81,6 +81,9 @@ class NodeWalker:
             # Local transformation (relative to parent node)
             tf = self._evaluator.GetNodeLocalTransform(node, time)
             locals.add(tf, t)
+
+        self.global_transforms[parent_name] = globals.get_tensor()
+        self.local_transforms[parent_name] = locals.get_tensor()
 
         for i in range(node.GetChildCount()):
             child = node.GetChild(i)
@@ -121,7 +124,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('file')
     parser.add_argument('--fps', type=int, default=30)
-    parser.add_argument('--max_time', type=float, default=10)
+    parser.add_argument('--max_time', type=float, default=2)
     parser.add_argument('--output', type=str, default='./anim_data.p')
     args = parser.parse_args()
 
@@ -130,4 +133,4 @@ if __name__ == '__main__':
     data = extract_animation_data(args.file, args.fps, args.max_time)
 
     with open(args.output, 'wb') as f:
-        pickle.dump(data, f)
+        pickle.dump(data, f, protocol=2)

@@ -33,7 +33,7 @@ def make_skeleton_filename(animation_file):
 
 def write_skeleton(file, data):
     with open(file, 'wb') as f:
-        pickle.dump(data, f)
+        pickle.dump(data, f, protocol=2)
 
 
 if __name__ == '__main__':
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('folder')
     parser.add_argument('--fps', type=int, default=30)
-    parser.add_argument('--max_time', type=float, default=10)
+    parser.add_argument('--max_time', type=float, default=2)
     parser.add_argument('--output_dir', type=str, default='./out/')
     args = parser.parse_args()
 
