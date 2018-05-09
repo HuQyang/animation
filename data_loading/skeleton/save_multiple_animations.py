@@ -45,15 +45,20 @@ if __name__ == '__main__':
     parser.add_argument('--fps', type=int, default=30)
     parser.add_argument('--max_time', type=float, default=2)
     parser.add_argument('--output_dir', type=str, default='./out/')
+    parser.add_argument('--skip', action='store_true', default=True)
     args = parser.parse_args()
 
+    replace = not args.skip
     files = find_files(args.folder, '*.fbx')
     files = [os.path.abspath(f) for f in files]
 
     print('Found {} in {}'.format(len(files), args.folder))
 
     for file in files:
-        data = extract_animation_data(file, args.fps, args.max_time)
-
         output_file = make_skeleton_filename(file)
-        write_skeleton(output_file, data)
+
+        if replace or not os.path.exists(output_file):
+            data = extract_animation_data(file, args.fps, args.max_time)
+            write_skeleton(output_file, data)
+        else:
+            print('Skipping {}'.format(output_file))
